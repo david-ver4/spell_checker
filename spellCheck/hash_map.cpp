@@ -91,8 +91,9 @@ int main() {
             std::vector<std::string> suggestions = spellChecker.getSuggestions(cleanedWord);
             if (!suggestions.empty()) {
                 std::cout << "Suggestions: ";
-                for (const std::string& suggestion : suggestions) {
-                    std::cout << suggestion << " ";
+                // up to 3 suggestions
+                for (size_t i = 0; i < std::min(suggestions.size(), size_t(3)); ++i) {
+                    std::cout << suggestions[i] << " ";
                 }
                 std::cout << "\n";
             }
