@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/davidvera/CLionProjects/spellCheck -B /Users/davidvera/CLionProjects/spellCheck/cmake-build-debug
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Library/Developer/CommandLineTools/usr/bin/make -DCMAKE_C_COMPILER=/Library/Developer/CommandLineTools/usr/bin/cc -DCMAKE_CXX_COMPILER=/Library/Developer/CommandLineTools/usr/bin/g++ -G "CodeBlocks - Unix Makefiles" -S /Users/alyssam/CLionProjects/CDA/spell_checker/spellCheck -B /Users/alyssam/CLionProjects/CDA/spell_checker/spellCheck/cmake-build-debug
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/davidvera/CLionProjects/spellCheck/cmake-build-debug
+-- Build files have been written to: /Users/alyssam/CLionProjects/CDA/spell_checker/spellCheck/cmake-build-debug
