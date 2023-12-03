@@ -1,4 +1,5 @@
 #include "trie.h"
+#include <limits.h>
 
 Trie::trieNode::~trieNode() {
     for (trieNode* n : children) {
@@ -13,6 +14,9 @@ Trie::~Trie() {
 }
 
 void Trie::Insert(const std::string& word) {
+    if (word.length() == 0) {
+        return;
+    }
     for (char c : word) {
         if (!isalpha(c)) {
             return;
@@ -26,6 +30,7 @@ void Trie::Insert(const std::string& word) {
         if (node == nullptr) {
             if (children[c-97] == nullptr) {
                 trieNode* newNode = new trieNode;
+                count++;
                 newNode->letter = c;
                 newNode->endOfWord = false;
                 children[c-97] = newNode;
@@ -48,6 +53,10 @@ void Trie::Insert(const std::string& word) {
 void Trie::InsertFromFile(const std::string& file) {
     std::ifstream filepath;
     filepath.open(file);
+    if (!filepath.is_open()) {
+        std::cout << "WTF" << std::endl;
+        exit(-1);
+    }
     while (!filepath.eof()) {
         std::string word;
         getline(filepath, word);
@@ -56,6 +65,7 @@ void Trie::InsertFromFile(const std::string& file) {
 }
 
 bool Trie::check(const std::string& word, std::vector<std::string>& similar) {
+    std::cout << count << std::endl;
     trieNode* curr = nullptr;
     for (char c : word) {
         if (!isalpha(c)) {
@@ -79,7 +89,7 @@ bool Trie::check(const std::string& word, std::vector<std::string>& similar) {
         return true;
     }
 
-    doSimilar(similar);
+    doSimilar(word, similar);
     return false;
 }
 
@@ -104,6 +114,38 @@ int Trie::levenshteinDistance(const std::string &word1, const std::string &word2
     return dp[m][n];
 }
 
-void Trie::doSimilar(std::vector<std::string> &similar) {
 
+void Trie::helper(const std::string &word, std::vector<std::string> &similar, std::vector<int> &dist, std::string curr, trieNode* root) {
+    curr += root->letter;
+    if (root->endOfWord) {
+        int curr_dist = levenshteinDistance(word, curr);
+        int max_dist = 0;
+        int max_ind = 0;
+        for (int i = 0; i < dist.size(); i++) {
+            if (max_dist < dist[i]) {
+                max_dist = dist[i];
+                max_ind = i;
+            }
+        }
+        if (curr_dist < max_dist) {
+            similar[max_ind] = curr;
+            dist[max_ind] = curr_dist;
+        }
+    }
+    for (trieNode* n : root->children) {
+        if (n != nullptr) {
+            helper(word, similar, dist, curr, n);
+        }
+    }
 }
+
+void Trie::doSimilar(const std::string& word, std::vector<std::string> &similar) {
+    std::vector<int> dist(3, INT_MAX);
+    similar = std::vector<std::string>(3);
+    for (trieNode* n : children) {
+        if (n != nullptr) {
+            helper(word, similar, dist, "", n);
+        }
+    }
+}
+
