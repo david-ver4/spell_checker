@@ -96,7 +96,7 @@ int Trie::levenshteinDistance(const std::string &word1, const std::string &word2
             } else if (j == 0) {
                 dp[i][j] = i;
             } else {
-                dp[i][j] = std::min({ dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (word1[i - 1] == word2[j - 1] ? 0 : 1) });
+                dp[i][j] = std::min(std::min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + (word1[i - 1] == word2[j - 1] ? 0 : 1));
             }
         }
     }
