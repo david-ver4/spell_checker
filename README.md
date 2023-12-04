@@ -25,12 +25,6 @@ The project is considered successful when the implemented data structures consis
 - **Trie:** A 26-ary tree where each child represents a possible succeeding letter from the alphabet, efficiently used to retrieve spell-checked words after user input.
 - **Hash Map:** Converts strings into indices for a "bucket" containing a collection of words, facilitating quick word comparisons.
 
-## Roles
-
-- **Diego Aguilar:** Visualization and usage coding
-- **Alyssa Mann:** Trie implementation
-- **David Vera:** Hash Map implementation
-
 ## How to Use
 
 1. Clone the repository.
