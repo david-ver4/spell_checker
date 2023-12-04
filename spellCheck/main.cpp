@@ -130,8 +130,10 @@ void eventLoop(sf::RenderWindow& w, sf::RenderWindow*& statsW) {
         }
         if (e.type == sf::Event::KeyPressed) {
             if ((windowState+1)/2 == 1 && hide) {
-                if (e.key.code == sf::Keyboard::Enter && !statsW) windowState += 3;
-                else if (e.key.code == sf::Keyboard::Enter) windowState += 5;
+                if (typingS.length() > 2) {
+                    if (e.key.code == sf::Keyboard::Enter && !statsW) windowState += 3;
+                    else if (e.key.code == sf::Keyboard::Enter) windowState += 5;
+                }
                 if (windowState == 7) {
                     windowState = 5;
                 }
