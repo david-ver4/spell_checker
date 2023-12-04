@@ -20,11 +20,6 @@ The project is considered successful when the implemented data structures consis
 - **Framework:** [SFML](https://www.sfml-dev.org/documentation/2.6.0/)
   - Learn how to install SFML: [SFML Installation Tutorial](https://youtu.be/PInJvpQSRHw)
 
-## Implementation Strategy
-
-- **Trie:** A 26-ary tree where each child represents a possible succeeding letter from the alphabet, efficiently used to retrieve spell-checked words after user input.
-- **Hash Map:** Converts strings into indices for a "bucket" containing a collection of words, facilitating quick word comparisons.
-
 ## How to Use
 
 1. Clone the repository.
