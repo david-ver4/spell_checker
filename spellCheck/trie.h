@@ -31,7 +31,6 @@ public:
     void InsertFromFile(const std::string& file);
     bool check(const std::string& word, std::vector<std::string>& similar);
     void helper(const std::string& word, std::vector<std::string>& similar, std::vector<int>& dist, std::string curr, trieNode* root);
-    void doSimilar(const std::string& word, std::vector<std::string>& similar);
     int levenshteinDistance(const std::string& word1, const std::string& word2) const;
     ~Trie();
 

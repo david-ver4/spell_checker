@@ -144,16 +144,6 @@ void Trie::helper(const std::string &word, std::vector<std::string> &similar, st
     }
 }
 
-void Trie::doSimilar(const std::string& word, std::vector<std::string> &similar) {
-    std::vector<int> dist(3, INT_MAX);
-    similar = std::vector<std::string>(3);
-    for (trieNode* n : children) {
-        if (n != nullptr) {
-            helper(word, similar, dist, "", n);
-        }
-    }
-}
-
 void Trie::doSimilarBottomUp(const std::string& word, std::vector<std::string> &similar) {
     std::vector<int> dist(3, INT_MAX);
     similar = std::vector<std::string>(3);
