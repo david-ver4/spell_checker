@@ -1,16 +1,21 @@
 #include "hash.h"
 
+// custom hash function for strings
 unsigned int customHash(const std::string& key, int tableSize) {
     unsigned int hash = 0;
+    // iterate through each character in the key
     for (char ch : key) {
         hash = (hash * 31) + static_cast<unsigned int>(ch);
     }
+    // ensure the hash fits within the table size and return
     return hash % tableSize;
 }
 
+// constructor for key-value pair
 template <typename K, typename V>
 KeyValuePair<K, V>::KeyValuePair(const K& k, const V& v) : key(k), value(v) {}
 
+// insert key-value pair into the hash map
 template <typename K, typename V, int TableSize>
 void HashMap<K, V, TableSize>::insert(const K& key, const V& value) {
     unsigned int index = customHash(key, TableSize);
@@ -19,10 +24,12 @@ void HashMap<K, V, TableSize>::insert(const K& key, const V& value) {
     s += table[index].size();
 }
 
+// find value associated with the given key in the hash map
 template <typename K, typename V, int TableSize>
 bool HashMap<K, V, TableSize>::find(const K& key, V& value) const {
     unsigned int index = customHash(key, TableSize);
     for (const auto& pair : table[index]) {
+        // if key is found, update value and return true
         if (pair.key == key) {
             value = pair.value;
             return true;
@@ -31,15 +38,19 @@ bool HashMap<K, V, TableSize>::find(const K& key, V& value) const {
     return false;
 }
 
+// perform a callback function on each key-value pair in the hash map
 template <typename K, typename V, int TableSize>
 void HashMap<K, V, TableSize>::forEach(std::function<void(const KeyValuePair<K, V>&)> callback) const {
+    // iterate through each bucket in the hash map
     for (const auto& bucket : table) {
+        // iterate through each key-value pair in the bucket and apply the callback
         for (const auto& pair : bucket) {
             callback(pair);
         }
     }
 }
 
+// load dictionary from a file into the spell checker's word map
 void SpellChecker::loadDictionary(const std::string& filename) {
     std::ifstream file(filename);
     std::string word;
@@ -52,6 +63,8 @@ void SpellChecker::loadDictionary(const std::string& filename) {
 
     file.close();
 }
+
+// check if a given word is present in the spell checker's word map
 bool SpellChecker::checkWord(const std::string& word) const {
     std::string lowercaseWord = word;
     std::transform(lowercaseWord.begin(), lowercaseWord.end(), lowercaseWord.begin(), ::tolower);
@@ -61,13 +74,17 @@ bool SpellChecker::checkWord(const std::string& word) const {
 
     return isWordPresent;
 }
+
+// get suggestions for a misspelled word from the spell checker's word map
 std::vector<std::string> SpellChecker::getSuggestions(const std::string& misspelledWord) const {
     std::vector<std::string> suggestions;
     int minDistance = std::numeric_limits<int>::max();
 
     wordMap.forEach([&](const auto& entry) {
         int distance = levenshteinDistance(misspelledWord, entry.key);
+        // calculate the levenshtein distance between the misspelled word and each entry in the map
         if (distance < minDistance) {
+            // update suggestions based on the calculated distance
             minDistance = distance;
             suggestions.clear();
             suggestions.push_back(entry.key);
@@ -79,12 +96,13 @@ std::vector<std::string> SpellChecker::getSuggestions(const std::string& misspel
     return suggestions;
 }
 
+// calculate the levenshtein distance between two strings
 int SpellChecker::levenshteinDistance(const std::string &word1, const std::string &word2) const {
     const int m = word1.length();
     const int n = word2.length();
-
+    // initialize a 2D vector for dynamic programming
     std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
-
+    // fill in the table
     for (int i = 0; i <= m; ++i) {
         for (int j = 0; j <= n; ++j) {
             if (i == 0) {
@@ -100,6 +118,7 @@ int SpellChecker::levenshteinDistance(const std::string &word1, const std::strin
     return dp[m][n];
 }
 
+// remove punctuation from a given word
 std::string removePunctuation(const std::string& word) {
     std::string result;
     for (char ch : word) {
@@ -109,49 +128,4 @@ std::string removePunctuation(const std::string& word) {
     }
     return result;
 }
-/*
-int main() {
-    SpellChecker spellChecker;
-    spellChecker.loadDictionary("words.txt");
 
-    std::string userInput;
-    std::cout << "Enter a word or a sentence for spell check: ";
-    std::getline(std::cin, userInput);
-
-    std::istringstream iss(userInput);
-    std::string word;
-    bool allCorrect = true;
-
-    auto start = std::chrono::high_resolution_clock::now();
-
-    while (iss >> word) {
-        std::string cleanedWord = removePunctuation(word);
-        if (!spellChecker.checkWord(cleanedWord)) {
-            std::cout << "The word '" << cleanedWord << "' is misspelled.\n";
-
-            std::vector<std::string> suggestions = spellChecker.getSuggestions(cleanedWord);
-            if (!suggestions.empty()) {
-                std::cout << "Suggestions: ";
-                // up to 3 suggestions
-                for (size_t i = 0; i < std::min(suggestions.size(), size_t(3)); ++i) {
-                    std::cout << suggestions[i] << " ";
-                }
-                std::cout << "\n";
-            }
-
-            allCorrect = false;
-        }
-    }
-
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-
-    if (allCorrect) {
-        std::cout << "All words are spelled correctly.\n";
-    }
-
-    std::cout << "Time taken for spell check: " << duration.count() << " microseconds\n";
-
-    return 0;
-}
-*/
