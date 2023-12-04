@@ -122,13 +122,17 @@ void Trie::helper(const std::string &word, std::vector<std::string> &similar, st
         int curr_dist = levenshteinDistance(word, curr);
         int max_dist = 0;
         int max_ind = 0;
+        bool already_done = false;
         for (int i = 0; i < dist.size(); i++) {
             if (max_dist < dist[i]) {
                 max_dist = dist[i];
                 max_ind = i;
             }
+            if (similar[i] == curr) {
+                already_done = true;
+            }
         }
-        if (curr_dist < max_dist) {
+        if (!already_done && curr != word && curr_dist < max_dist) {
             similar[max_ind] = curr;
             dist[max_ind] = curr_dist;
         }
