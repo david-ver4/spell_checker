@@ -1,6 +1,83 @@
 #include "hash.h"
 
-int SpellChecker::levenshteinDistance(const std::string& word1, const std::string& word2) const {
+unsigned int customHash(const std::string& key, int tableSize) {
+    unsigned int hash = 0;
+    for (char ch : key) {
+        hash = (hash * 31) + static_cast<unsigned int>(ch);
+    }
+    return hash % tableSize;
+}
+
+template <typename K, typename V>
+KeyValuePair<K, V>::KeyValuePair(const K& k, const V& v) : key(k), value(v) {}
+
+template <typename K, typename V, int TableSize>
+void HashMap<K, V, TableSize>::insert(const K& key, const V& value) {
+    unsigned int index = customHash(key, TableSize);
+    table[index].emplace_back(key, value);
+}
+
+template <typename K, typename V, int TableSize>
+bool HashMap<K, V, TableSize>::find(const K& key, V& value) const {
+    unsigned int index = customHash(key, TableSize);
+    for (const auto& pair : table[index]) {
+        if (pair.key == key) {
+            value = pair.value;
+            return true;
+        }
+    }
+    return false;
+}
+
+template <typename K, typename V, int TableSize>
+void HashMap<K, V, TableSize>::forEach(std::function<void(const KeyValuePair<K, V>&)> callback) const {
+    for (const auto& bucket : table) {
+        for (const auto& pair : bucket) {
+            callback(pair);
+        }
+    }
+}
+
+void SpellChecker::loadDictionary(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string word;
+
+    while (file >> word) {
+        std::string lowercaseWord = word;
+        std::transform(lowercaseWord.begin(), lowercaseWord.end(), lowercaseWord.begin(), ::tolower);
+        wordMap.insert(lowercaseWord, true);
+    }
+
+    file.close();
+}
+bool SpellChecker::checkWord(const std::string& word) const {
+    std::string lowercaseWord = word;
+    std::transform(lowercaseWord.begin(), lowercaseWord.end(), lowercaseWord.begin(), ::tolower);
+
+    bool isWordPresent = false;
+    wordMap.find(lowercaseWord, isWordPresent);
+
+    return isWordPresent;
+}
+std::vector<std::string> SpellChecker::getSuggestions(const std::string& misspelledWord) const {
+    std::vector<std::string> suggestions;
+    int minDistance = std::numeric_limits<int>::max();
+
+    wordMap.forEach([&](const auto& entry) {
+        int distance = levenshteinDistance(misspelledWord, entry.key);
+        if (distance < minDistance) {
+            minDistance = distance;
+            suggestions.clear();
+            suggestions.push_back(entry.key);
+        } else if (distance == minDistance) {
+            suggestions.push_back(entry.key);
+        }
+    });
+
+    return suggestions;
+}
+
+int SpellChecker::levenshteinDistance(const std::string &word1, const std::string &word2) const {
     const int m = word1.length();
     const int n = word2.length();
 
@@ -19,44 +96,6 @@ int SpellChecker::levenshteinDistance(const std::string& word1, const std::strin
     }
 
     return dp[m][n];
-}
-
-void SpellChecker::loadDictionary(const std::string& filename) {
-    std::ifstream file(filename);
-    std::string word;
-
-    while (file >> word) {
-        std::string lowercaseWord = word;
-        std::transform(lowercaseWord.begin(), lowercaseWord.end(), lowercaseWord.begin(), ::tolower);
-        wordMap[lowercaseWord] = true;
-    }
-
-    file.close();
-}
-
-bool SpellChecker::checkWord(const std::string& word) const {
-    std::string lowercaseWord = word;
-    std::transform(lowercaseWord.begin(), lowercaseWord.end(), lowercaseWord.begin(), ::tolower);
-
-    return wordMap.find(lowercaseWord) != wordMap.end();
-}
-
-std::vector<std::string> SpellChecker::getSuggestions(const std::string& misspelledWord) const {
-    std::vector<std::string> suggestions;
-    int minDistance = std::numeric_limits<int>::max();
-
-    for (const auto& entry : wordMap) {
-        int distance = levenshteinDistance(misspelledWord, entry.first);
-        if (distance < minDistance) {
-            minDistance = distance;
-            suggestions.clear();
-            suggestions.push_back(entry.first);
-        } else if (distance == minDistance) {
-            suggestions.push_back(entry.first);
-        }
-    }
-
-    return suggestions;
 }
 
 std::string removePunctuation(const std::string& word) {
