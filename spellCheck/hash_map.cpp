@@ -14,7 +14,9 @@ KeyValuePair<K, V>::KeyValuePair(const K& k, const V& v) : key(k), value(v) {}
 template <typename K, typename V, int TableSize>
 void HashMap<K, V, TableSize>::insert(const K& key, const V& value) {
     unsigned int index = customHash(key, TableSize);
+    s -= table[index].size();
     table[index].emplace_back(key, value);
+    s += table[index].size();
 }
 
 template <typename K, typename V, int TableSize>

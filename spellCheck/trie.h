@@ -25,6 +25,7 @@ public:
             children[i] = nullptr;
         }
     }
+    int size = 0;
     trieNode* children[alphabet_size];
     void Insert(const std::string& word);
     void InsertFromFile(const std::string& file);
@@ -34,6 +35,8 @@ public:
     int levenshteinDistance(const std::string& word1, const std::string& word2) const;
     ~Trie();
 
+    void doSimilarBottomUp(const std::string &word, std::vector<std::string> &similar);
+    void doSimilarBUHelper(const std::string &word, std::vector<std::string> &similar, std::vector<int> dist, std::string curr, trieNode *root);
 };
 
 

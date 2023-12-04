@@ -30,7 +30,7 @@ void Trie::Insert(const std::string& word) {
         if (node == nullptr) {
             if (children[c-97] == nullptr) {
                 trieNode* newNode = new trieNode;
-                count++;
+                size++;
                 newNode->letter = c;
                 newNode->endOfWord = false;
                 children[c-97] = newNode;
@@ -40,6 +40,7 @@ void Trie::Insert(const std::string& word) {
         else {
             if (node->children[c-97] == nullptr) {
                 trieNode* newNode = new trieNode;
+                size++;
                 newNode->letter = c;
                 newNode->endOfWord = false;
                 node->children[c-97] = newNode;
@@ -65,7 +66,6 @@ void Trie::InsertFromFile(const std::string& file) {
 }
 
 bool Trie::check(const std::string& word, std::vector<std::string>& similar) {
-    std::cout << count << std::endl;
     trieNode* curr = nullptr;
     for (char c : word) {
         if (!isalpha(c)) {
@@ -80,6 +80,7 @@ bool Trie::check(const std::string& word, std::vector<std::string>& similar) {
         }
         else {
             if (curr->children[c-97] == nullptr) {
+                doSimilarBottomUp(word, similar);
                 return false;
             }
             curr = curr->children[c-97];
@@ -89,7 +90,7 @@ bool Trie::check(const std::string& word, std::vector<std::string>& similar) {
         return true;
     }
 
-    doSimilar(word, similar);
+    doSimilarBottomUp(word, similar);
     return false;
 }
 
@@ -147,5 +148,37 @@ void Trie::doSimilar(const std::string& word, std::vector<std::string> &similar)
             helper(word, similar, dist, "", n);
         }
     }
+}
+
+void Trie::doSimilarBottomUp(const std::string& word, std::vector<std::string> &similar) {
+    std::vector<int> dist(3, INT_MAX);
+    similar = std::vector<std::string>(3);
+    trieNode* n = nullptr;
+    trieNode* last = nullptr;
+    std::string curr = "";
+    for (char c : word) {
+        curr += c;
+        last = n;
+        if (n == nullptr) {
+            n = children[tolower(c)-97];
+        }
+        else {
+            n = n->children[tolower(c)-97];
+        }
+        if (n == nullptr) {
+            break;
+        }
+    }
+    helper(word, similar, dist, curr.substr(0, curr.length()-2), last);
+    if (similar[2] == "") {
+        doSimilarBUHelper(word, similar, dist, "", children[tolower(word[0])-97]);
+    }
+}
+void Trie::doSimilarBUHelper(const std::string& word, std::vector<std::string> &similar, std::vector<int> dist, std::string curr, trieNode* root) {
+    if (root == nullptr || curr == word) {
+        return;
+    }
+    doSimilarBUHelper(word, similar, dist, curr+root->letter, children[tolower(word[curr.length()+1])-97]);
+    helper(word, similar, dist, curr, root);
 }
 
