@@ -163,7 +163,7 @@ void Trie::doSimilarBottomUp(const std::string& word, std::vector<std::string> &
     for (char c : word) {
         curr += c;
         last = n;
-        if (n == nullptr) {
+        if (curr.size() == 1) {
             n = children[tolower(c)-97];
         }
         else {
@@ -182,7 +182,9 @@ void Trie::doSimilarBUHelper(const std::string& word, std::vector<std::string> &
     if (root == nullptr || curr == word) {
         return;
     }
-    doSimilarBUHelper(word, similar, dist, curr+root->letter, children[tolower(word[curr.length()+1])-97]);
-    helper(word, similar, dist, curr, root);
+    doSimilarBUHelper(word, similar, dist, curr+root->letter, root->children[tolower(word[curr.length()+1])-97]);
+    if (similar[2] == "") {
+        helper(word, similar, dist, curr, root);
+    }
 }
 
