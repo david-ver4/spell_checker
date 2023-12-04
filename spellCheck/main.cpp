@@ -395,7 +395,7 @@ void renderStats(sf::RenderWindow*& w) {
     std::string statsTitle[3] = {"Start up time: ","Check/Suggest time: ","Approx. Mem Usage: "};
     for (int i = 0; i < 3; i++) {
         sf::Text statsT;
-        statsT.setString(statsTitle[i]+ std::to_string(stats[i]));
+        statsT.setString(statsTitle[i]+ std::to_string((unsigned int)stats[i]));
         statsT.setFillColor(sf::Color(0,0,0));
         statsT.setFont(*courier);
         statsT.setStyle(sf::Text::Bold);
