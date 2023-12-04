@@ -1,30 +1,50 @@
-#ifndef SPELLCHECKER_H
-#define SPELLCHECKER_H
+#ifndef HASH_H
+#define HASH_H
 
-#include <iostream>
-#include <fstream>
-#include <unordered_map>
+#include <string>
 #include <vector>
+#include <functional>
+#include <fstream>
 #include <sstream>
 #include <algorithm>
 #include <cctype>
 #include <chrono>
 #include <limits>
+#include <iostream>
+
+unsigned int customHash(const std::string& key, int tableSize);
+
+template <typename K, typename V>
+struct KeyValuePair {
+    K key;
+    V value;
+
+    KeyValuePair(const K& k, const V& v);
+};
+
+template <typename K, typename V, int TableSize>
+class HashMap {
+private:
+    std::vector<KeyValuePair<K, V>> table[TableSize];
+
+public:
+    void insert(const K& key, const V& value);
+    bool find(const K& key, V& value) const;
+    void forEach(std::function<void(const KeyValuePair<K, V>&)> callback) const;
+};
 
 class SpellChecker {
 private:
-    std::unordered_map<std::string, bool> wordMap;
+    HashMap<std::string, bool, 100> wordMap;
 
     int levenshteinDistance(const std::string& word1, const std::string& word2) const;
 
 public:
     void loadDictionary(const std::string& filename);
-
     bool checkWord(const std::string& word) const;
-
     std::vector<std::string> getSuggestions(const std::string& misspelledWord) const;
 };
 
 std::string removePunctuation(const std::string& word);
 
-#endif  // SPELLCHECKER_H
+#endif // HASH_H
