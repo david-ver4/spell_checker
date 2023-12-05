@@ -18,7 +18,6 @@ The project is considered successful when the implemented data structures consis
 
 - **Programming Languages:** C++
 - **Framework:** [SFML](https://www.sfml-dev.org/documentation/2.6.0/)
-  - Learn how to install SFML: [SFML Installation Tutorial](https://youtu.be/PInJvpQSRHw)
 
 ## How to Use
 
