@@ -31,6 +31,7 @@ The project is considered successful when the implemented data structures consis
 
 - [GeeksforGeeks - Trie Insert and Search](https://www.geeksforgeeks.org/trie-insert-and-search/)
 - [DigitalOcean - Trie Data Structure in C++](https://www.digitalocean.com/community/tutorials/trie-data-structure-in-c-plus-plus)
+- [Stack Overflow - Tree Data Structure Using Class C](https://stackoverflow.com/questions/49884974/trie-data-structure-using-class-c )
 - [GitHub - English Words Dataset](https://github.com/dwyl/english-words)
 - [DigitalOcean - Hash Table in C++](https://www.digitalocean.com/community/tutorials/hash-table-in-c-plus-plus)
 - [SFML Documentation](https://www.sfml-dev.org/documentation/2.6.0/)
