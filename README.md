@@ -25,6 +25,7 @@ The project is considered successful when the implemented data structures consis
 1. Clone the repository.
 2. Compile the C++ code using an appropriate compiler.
 3. Run the executable to utilize the GatorSpellcheck tool.
+4. (Optonal) Replace words.txt with own dictionary txt.
 
 ## References
 
@@ -33,6 +34,7 @@ The project is considered successful when the implemented data structures consis
 - [GitHub - English Words Dataset](https://github.com/dwyl/english-words)
 - [DigitalOcean - Hash Table in C++](https://www.digitalocean.com/community/tutorials/hash-table-in-c-plus-plus)
 - [SFML Documentation](https://www.sfml-dev.org/documentation/2.6.0/)
+- [Levenshtein Distance](https://www.geeksforgeeks.org/introduction-to-levenshtein-distance/)
 
 ## Future Enhancements
 
